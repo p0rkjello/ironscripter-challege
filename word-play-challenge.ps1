@@ -4,7 +4,8 @@ When you create a string of text in PowerShell, each character can also be repre
 The value can be turned back into the original string character.
 #>
 
-function get-CharInt($Char) {
+# Return Int from Character
+function Get-CharInt($Char) {
     [int][char]$Char
 }
 
@@ -29,7 +30,7 @@ The second part of the challenge is to write a function that does the opposite, 
 If you’ve done this properly you should be able to decode this: 'àÞîÊäæÐÊØØ'
 #>
 
-function ConvertTo-Int {
+function ConvertTo-IntX2 {
     [CmdletBinding()]
     param(
         [Parameter(ValueFromPipeline)]
@@ -42,9 +43,9 @@ function ConvertTo-Int {
     }
 }
 
-$decode = 'àÞîÊäæÐÊØØ'
-
-function ConvertFrom-Int {
+# Its unclear if the output needs to be returned exactly as the input, for example on the same line.
+# Updated to output the results on a single line.
+function ConvertFrom-IntX2 {
     [CmdletBinding()]
     param(
         [Parameter(ValueFromPipeline)]
@@ -52,7 +53,17 @@ function ConvertFrom-Int {
         [int[]]
         $Int
     )
+    begin {
+        $Output = [System.Collections.ArrayList]@()
+    }
     process {
-        $Int | ForEach-Object { $_ / 2 } | ForEach-Object { [char][int]$_ }
+        [void]$Output.Add(($Int | ForEach-Object { $_ / 2 } | ForEach-Object { [char][int]$_ }))
+        
+    }
+    end {
+        $Output -join ''
     }
 }
+
+$decode = 'àÞîÊäæÐÊØØ'
+$decode | ConvertTo-IntX2 | ConvertFrom-IntX2
